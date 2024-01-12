@@ -24,9 +24,8 @@ jobs:
       - name: Checkout different repository
         uses: actions/checkout@v2
         with:
-          repository: Nitin-Personal/javaspringvulny
-          # repository:  ${{ github.event.client_payload.repository_full_name }}   # <username>/<repository-name>
-          # ref: 'master' # ${{ github.event.client_payload.commit }} # <branch, tag, or commit>
+          # repository: Nitin-Personal/javaspringvulny
+          repository:  ${{ github.event.client_payload.repository_full_name }}   
           token: ${{ steps.get_workflow_token.outputs.token }}
           
       - name: Clone External Repository
@@ -44,15 +43,15 @@ jobs:
           # git config --global --add safe.directory /__w/nn-zcs/nn-zcs
           # cd cloned-repo
           # git status
-          # export SEMGREP_REPO_NAME=$SEMGREP_REPO_NAME
-          # export SEMGREP_REPO_URL=$GIT_URL
+          export SEMGREP_REPO_NAME=$SEMGREP_REPO_NAME
+          export SEMGREP_REPO_URL=$GIT_URL
           semgrep ci
         env:
           # SEMGREP_REPO_NAME: ${{REPOSITORY_NAME}}
           # SEMGREP_REPO_URL: ${{GIT_URL}}
-          # GIT_URL: ${{ github.event.client_payload.git_url }}
-          # REPOSITORY_NAME: ${{ github.event.client_payload.repository_name }}
+          GIT_URL: ${{ github.event.client_payload.git_url }}
+          REPOSITORY_NAME: ${{ github.event.client_payload.repository_name }}
           # PAT_READ_ONLY_CUSTOMER_REPO: ${{ secrets.PAT_READ_ONLY_CUSTOMER_REPO }}
-          # SEMGREP_REPO_URL: ${{ github.event.client_payload.git_url }}
-          # SEMGREP_REPO_NAME: ${{ github.event.client_payload.repository_full_name }}
+          SEMGREP_REPO_URL: ${{ github.event.client_payload.git_url }}
+          SEMGREP_REPO_NAME: ${{ github.event.client_payload.repository_full_name }}
           SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
