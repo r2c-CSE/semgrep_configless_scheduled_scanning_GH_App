@@ -63,10 +63,10 @@ jobs:
         daily_repos = daily_df[0].tolist()
         weekly_repos = weekly_df[0].tolist()
 
-        headers = {'Authorization': f'token { os.environ['SEMGREP_API_WEB_TOKEN'] }'}
+        headers = {'Authorization': f"token { os.environ['SEMGREP_API_WEB_TOKEN'] }"}
 
-        response = requests.get(f'https://semgrep.dev/api/v1/deployments/{deployment_slug}/projects', headers=headers)
-        repos = response.json()
+        semgrep_response = requests.get(f"https://semgrep.dev/api/v1/deployments/{os.environ['SEMGREP_DEPLOYMENT_SLUG'] }/projects", headers=headers)
+        semgrep_repos = semgrep_response.json()
 
         # Read the CSV files
         daily_df = pd.read_csv('daily.csv', header=None)
@@ -77,8 +77,10 @@ jobs:
         
         for repo in repos:
             repo_name = repo['name']
+            repo_full_name = repo['full_name']
             created_at = repo['created_at']
             html_url = repo['html_url']
+            latest_scan_time = next((semgrep_repo['latest_scan_at'] for semgrep_repo in semgrep_repos if semgrep_repo['name'] == repo_full_name), None)
             daily_mark = 1 if repo_name in daily_repos else 0
             weekly_mark = 1 if repo_name in weekly_repos else 0
             not_covered = 1 if (daily_mark+weekly_mark == 0) else 0
