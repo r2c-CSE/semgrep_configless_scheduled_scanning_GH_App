@@ -70,12 +70,12 @@ jobs:
         weekly_repos_not_in_github_repos = [item for item in weekly_repos if item not in github_repos]
 
         # Convert list to DataFrame
-        df_daily_repos_not_in_github_repos = pd.DataFrame(daily_repos_not_in_github_repos, columns=['Repos'])
-        df_weekly_repos_not_in_github_repos = pd.DataFrame(weekly_repos_not_in_github_repos, columns=['Repos'])
+        df_daily_repos_not_in_github_repos = pd.DataFrame(daily_repos_not_in_github_repos)
+        df_weekly_repos_not_in_github_repos = pd.DataFrame(weekly_repos_not_in_github_repos)
         
         # Write DataFrame to CSV
-        df_daily_repos_not_in_github_repos.to_csv('daily_repos_not_in_github_repos.csv', index=False)
-        df_weekly_repos_not_in_github_repos.to_csv('weekly_repos_not_in_github_repos.csv', index=False)
+        df_daily_repos_not_in_github_repos.to_csv('daily_repos_not_in_github_repos.csv')
+        df_weekly_repos_not_in_github_repos.to_csv('weekly_repos_not_in_github_repos.csv')
 
 
         headers = {"Accept": "application/json", "Authorization": "Bearer " + os.environ['SEMGREP_API_WEB_TOKEN']}
