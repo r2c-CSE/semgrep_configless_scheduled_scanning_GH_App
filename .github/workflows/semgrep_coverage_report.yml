@@ -105,9 +105,7 @@ jobs:
                     latest_scan = sg_repo['latest_scan_at']
                     break
             
-            if latest_scan:
-                # print(f"Latest scan date for {repo_name}- {latest_scan}")
-            else:
+            if latest_scan is not None::
                 print(f"{repo_name} not scanned by Semgrep yet")            
             
             daily_mark = 1 if repo_name in daily_repos else 0
