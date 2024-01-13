@@ -50,7 +50,7 @@ jobs:
         full_repo_name = os.environ['GITHUB_REPOSITORY']
         # Extract the organization name
         org_name = full_repo_name.split('/')[0]
-        print("Organization Name:", org_name)
+        logging.INFO("Organization Name:", org_name)
         pat = os.environ['PAT_READ_ONLY_CUSTOMER_REPO']
         headers = {'Authorization': f'token {pat}'}
 
@@ -85,7 +85,6 @@ jobs:
         if r.status_code != 200:
             sys.exit(f'Get failed: {r.text}')
         semgrep_repos = json.loads(r.text)   
-        print(semgrep_repos)
 
         # Read the CSV files
         daily_df = pd.read_csv('daily.csv', header=None)
@@ -102,15 +101,14 @@ jobs:
             
             latest_scan = None
             for sg_repo in semgrep_repos['projects']:
-                print(sg_repo['name'])
                 if sg_repo['name'] == repo_full_name:
                     latest_scan = sg_repo['latest_scan_at']
                     break
             
             if latest_scan:
-                print(f"Latest scan date for {repo_name}- {latest_scan}")
+                logging.INFO(f"Latest scan date for {repo_name}- {latest_scan}")
             else:
-                print(f"{repo_name} not scanned by Semgrep yet")            
+                logging.WARNING(f"{repo_name} not scanned by Semgrep yet")            
             
             daily_mark = 1 if repo_name in daily_repos else 0
             weekly_mark = 1 if repo_name in weekly_repos else 0
