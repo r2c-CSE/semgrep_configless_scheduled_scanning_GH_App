@@ -50,7 +50,7 @@ jobs:
         full_repo_name = os.environ['GITHUB_REPOSITORY']
         # Extract the organization name
         org_name = full_repo_name.split('/')[0]
-        # logging.INFO("Organization Name:" + str(org_name))
+        print(f"Organization Name: {org_name}")
         pat = os.environ['PAT_READ_ONLY_CUSTOMER_REPO']
         headers = {'Authorization': f'token {pat}'}
 
@@ -106,9 +106,9 @@ jobs:
                     break
             
             if latest_scan:
-                logging.INFO(f"Latest scan date for {repo_name}- {latest_scan}")
+                # print(f"Latest scan date for {repo_name}- {latest_scan}")
             else:
-                logging.WARNING(f"{repo_name} not scanned by Semgrep yet")            
+                print(f"{repo_name} not scanned by Semgrep yet")            
             
             daily_mark = 1 if repo_name in daily_repos else 0
             weekly_mark = 1 if repo_name in weekly_repos else 0
