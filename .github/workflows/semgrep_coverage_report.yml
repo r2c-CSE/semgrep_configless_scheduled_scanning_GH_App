@@ -81,16 +81,27 @@ jobs:
             repo_full_name = repo['full_name']
             created_at = repo['created_at']
             html_url = repo['html_url']
-            temp = semgrep_repo for semgrep_repo in semgrep_repos if (semgrep_repo['name'] == repo_full_name)
-            print(temp)
+            
+            latest_scan = None
+            for sg_repo in semgrep_repos:
+                print(sg_repo['name'])
+                if sg_repo['name'] == repo_full_name:
+                    latest_scan = sg_repo['latest_scan_at']
+                    break
+            
+            if latest_scan:
+                print(f"Latest scan date for {repo_name}- {latest_scan}")
+            else:
+                print(f"{repo_name} not scanned by Semgrep yet")            
+            
             daily_mark = 1 if repo_name in daily_repos else 0
             weekly_mark = 1 if repo_name in weekly_repos else 0
             not_covered = 1 if (daily_mark+weekly_mark == 0) else 0
             duplicate_scans = 1 if (daily_mark+weekly_mark == 2) else 0            
-            coverage_data.append([repo_name, daily_mark, weekly_mark, not_covered, duplicate_scans, created_at, html_url])
+            coverage_data.append([repo_name, daily_mark, weekly_mark, not_covered, duplicate_scans, latest_scan, created_at, html_url])
         
         # Create a DataFrame and write to CSV
-        coverage_df = pd.DataFrame(coverage_data, columns=['Repository', 'Daily', 'Weekly', 'Not Covered', 'Duplicate Scans', 'Created At', 'URL'])
+        coverage_df = pd.DataFrame(coverage_data, columns=['Repository', 'Daily', 'Weekly', 'Not Covered', 'Duplicate Scans', 'Latest Scan', 'Created At', 'URL'])
         coverage_df.to_csv('coverage.csv', index=False)
       shell: python
       
