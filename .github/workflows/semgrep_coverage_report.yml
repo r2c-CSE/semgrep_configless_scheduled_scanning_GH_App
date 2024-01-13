@@ -80,7 +80,8 @@ jobs:
             repo_full_name = repo['full_name']
             created_at = repo['created_at']
             html_url = repo['html_url']
-            latest_scan_time = next((semgrep_repo['latest_scan_at'] for semgrep_repo in semgrep_repos if semgrep_repo['name'] == repo_full_name), None)
+            temp = semgrep_repo for semgrep_repo in semgrep_repos if (semgrep_repo['name'] == repo_full_name)
+            print(temp)
             daily_mark = 1 if repo_name in daily_repos else 0
             weekly_mark = 1 if repo_name in weekly_repos else 0
             not_covered = 1 if (daily_mark+weekly_mark == 0) else 0
