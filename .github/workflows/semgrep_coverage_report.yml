@@ -130,6 +130,6 @@ jobs:
       with:
         name: semgrep-coverage-report.csv
         path: |
-          coverage.csv  # Replace with the path to your CSV file
           daily_repos_not_in_github_repos.csv
           weekly_repos_not_in_github_repos.csv
+          coverage.csv  
