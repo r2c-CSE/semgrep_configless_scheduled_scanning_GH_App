@@ -74,8 +74,8 @@ jobs:
         df_weekly_repos_not_in_github_repos = pd.DataFrame(weekly_repos_not_in_github_repos)
         
         # Write DataFrame to CSV
-        df_daily_repos_not_in_github_repos.to_csv('daily_repos_not_in_github_repos.csv')
-        df_weekly_repos_not_in_github_repos.to_csv('weekly_repos_not_in_github_repos.csv')
+        df_daily_repos_not_in_github_repos.to_csv('daily_repos_not_in_github_repos.csv', index=False)
+        df_weekly_repos_not_in_github_repos.to_csv('weekly_repos_not_in_github_repos.csv', index=False)
 
 
         headers = {"Accept": "application/json", "Authorization": "Bearer " + os.environ['SEMGREP_API_WEB_TOKEN']}
