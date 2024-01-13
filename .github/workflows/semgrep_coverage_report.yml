@@ -50,7 +50,7 @@ jobs:
         full_repo_name = os.environ['GITHUB_REPOSITORY']
         # Extract the organization name
         org_name = full_repo_name.split('/')[0]
-        logging.INFO("Organization Name:" + str(org_name))
+        # logging.INFO("Organization Name:" + str(org_name))
         pat = os.environ['PAT_READ_ONLY_CUSTOMER_REPO']
         headers = {'Authorization': f'token {pat}'}
 
