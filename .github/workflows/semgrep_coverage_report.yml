@@ -67,6 +67,7 @@ jobs:
 
         semgrep_response = requests.get(f"https://semgrep.dev/api/v1/deployments/{os.environ['SEMGREP_DEPLOYMENT_SLUG'] }/projects", headers=headers)
         semgrep_repos = semgrep_response.json()
+        print(semgrep_response.status.code)
 
         # Read the CSV files
         daily_df = pd.read_csv('daily.csv', header=None)
