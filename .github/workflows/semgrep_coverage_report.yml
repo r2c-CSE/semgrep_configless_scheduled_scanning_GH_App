@@ -87,12 +87,12 @@ jobs:
             created_at = repo['created_at']
             html_url = repo['html_url']
             
-            latest_scan = None
-            for sg_repo in semgrep_repos['projects']:
-                print(sg_repo['name'])
-                if sg_repo['name'] == repo_full_name:
-                    latest_scan = sg_repo['latest_scan_at']
-                    break
+            latest_scan = next((sg_repo['latest_scan_at'] for sg_repo in semgrep_repos if sg_repo['name'] == repo_full_name), None)
+            # for sg_repo in semgrep_repos['projects']:
+            #     print(sg_repo['name'])
+            #     if sg_repo['name'] == repo_full_name:
+            #         latest_scan = sg_repo['latest_scan_at']
+            #         break
             
             if latest_scan:
                 print(f"Latest scan date for {repo_name}- {latest_scan}")
