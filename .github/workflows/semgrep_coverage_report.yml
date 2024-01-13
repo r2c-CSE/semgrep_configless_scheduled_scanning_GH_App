@@ -43,6 +43,7 @@ jobs:
         # Set up logging
         logger = logging.getLogger()
         logger.setLevel(logging.INFO)
+                 
 
         # GitHub repository in the format "org_name/repo_name"
         full_repo_name = os.environ['GITHUB_REPOSITORY']
@@ -63,11 +64,14 @@ jobs:
         daily_repos = daily_df[0].tolist()
         weekly_repos = weekly_df[0].tolist()
 
-        headers = {'Authorization': f"token { os.environ['SEMGREP_API_WEB_TOKEN'] }"}
-
-        semgrep_response = requests.get(f"https://semgrep.dev/api/v1/deployments/{os.environ['SEMGREP_DEPLOYMENT_SLUG'] }/projects", headers=headers)
-        semgrep_repos = semgrep_response.json()
-        
+        headers = {"Accept": "application/json", "Authorization": "Bearer " + os.environ['SEMGREP_API_WEB_TOKEN']}
+        params =  {"page_size": 3000}
+    
+        semgrep_response = requests.get(f"https://semgrep.dev/api/v1/deployments/{os.environ['SEMGREP_DEPLOYMENT_SLUG'] }/projects?page=0",params=params ,headers=headers)
+        if r.status_code != 200:
+            sys.exit(f'Get failed: {r.text}')
+        semgrep_repos = json.loads(r.text)   
+        print(semgrep_repos)
 
         # Read the CSV files
         daily_df = pd.read_csv('daily.csv', header=None)
