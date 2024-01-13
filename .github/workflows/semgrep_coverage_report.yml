@@ -70,9 +70,6 @@ jobs:
         # response = requests.get(f'https://api.github.com/orgs/{org_name}/repos', headers=headers)
         # repos = response.json()
 
-        # response = requests.get(f'https://api.github.com/orgs/{org_name}/repos', headers=headers)
-        # repos = response.json()
-
         # Read the CSV files
         daily_df = pd.read_csv('daily.csv', header=None)
         weekly_df = pd.read_csv('weekly.csv', header=None)
@@ -121,7 +118,7 @@ jobs:
                     latest_scan = sg_repo['latest_scan_at']
                     break
             
-            if latest_scan is not None:
+            if latest_scan is None:
                 print(f"{repo_name} not scanned by Semgrep yet")            
             
             daily_mark = 1 if repo_name in daily_repos else 0
