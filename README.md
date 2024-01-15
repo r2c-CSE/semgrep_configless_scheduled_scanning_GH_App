@@ -403,11 +403,12 @@ You will need to create the following 3 Repository Variables:
 - `WAIT_TIME_BETWEEN_SCANS: ${{ vars.WAIT_TIME_BETWEEN_SCANS }}`- Wait time (in seconds) between triggering Semgrep Scans
 - `LOGGING_LEVEL: ${{ vars.LOGGING_LEVEL }}` -  Control logging level
 
-![Untitled](How%20to%20run%20Semgrep%20Scheduled%20scans%20on%20all%20repos%20in%20cbaf9f02192245c3a7b2c0927b5fa356/Untitled.png)
+<img width="653" alt="image" src="https://github.com/Nitin-Personal/semgrep-appsec/assets/3192845/2b523515-becd-43fb-a194-56d730cc10b6">
 
-![Untitled](How%20to%20run%20Semgrep%20Scheduled%20scans%20on%20all%20repos%20in%20cbaf9f02192245c3a7b2c0927b5fa356/Untitled%201.png)
+<img width="972" alt="image" src="https://github.com/Nitin-Personal/semgrep-appsec/assets/3192845/bb616b98-a6c5-4242-aafd-9d42926f96f6">
 
-## Workflow**-2**: Creating a workflow file in the scanning repo (this could be in the same GH ORG as customer repos or in a different GH ORG)
+
+## Workflow-2: Creating a workflow file in the scanning repo (this could be in the same GH ORG as customer repos or in a different GH ORG)
 
 ```yaml
 name: Run Semgrep Scan on Dispatch
@@ -474,13 +475,14 @@ You will need to create the following 2 Secrets:
     - `PAT_READ_ONLY_CUSTOMER_REPO: ${{ secrets.PAT_READ_ONLY_CUSTOMER_REPO }}`- Generate PAT with Read-Only access to all repos in your GH ORG
         - **NOTE**: the scans run inside your GitHub Actions runners and no code leaves your environment (or sent to Semgrep) as part of these scheduled scans
         - [https://github.com/settings/tokens?type=beta](https://github.com/settings/tokens?type=beta)
-        - 
-        
-        ![Untitled](How%20to%20run%20Semgrep%20Scheduled%20scans%20on%20all%20repos%20in%20cbaf9f02192245c3a7b2c0927b5fa356/Untitled%202.png)
-        
-    - **OPTIONAL (needed only if you hit issues using `GITHUB_TOKEN`):** `PAT_REPOSITORY_DISPATCH_APPSEC_REPO: ${{ secrets.PAT_REPOSITORY_DISPATCH_APPSEC_REPO }}` - Generate PAT with permissions to initiate repository dispatch in AppSec repo in your AppSec GH ORG:  I should clarify that in order to trigger the workflow, the request must be authenticated with a personal access token for a user that is authorized to access the AppSec repo- `semgrep-appsec`. To create an access token, [follow these steps from GitHub](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line) and be sure that you have given the token access to the repo scope.
 
-![Untitled](How%20to%20run%20Semgrep%20Scheduled%20scans%20on%20all%20repos%20in%20cbaf9f02192245c3a7b2c0927b5fa356/Untitled%203.png)
+![image](https://github.com/Nitin-Personal/semgrep-appsec/assets/3192845/b5e41882-2be4-446c-b7db-3ec40a93d32f)
+
+          
+     - **OPTIONAL (needed only if you hit issues using `GITHUB_TOKEN`):** `PAT_REPOSITORY_DISPATCH_APPSEC_REPO: ${{ secrets.PAT_REPOSITORY_DISPATCH_APPSEC_REPO }}` - Generate PAT with permissions to initiate repository dispatch in AppSec repo in your AppSec GH ORG:  I should clarify that in order to trigger the workflow, the request must be authenticated with a personal access token for a user that is authorized to access the AppSec repo- `semgrep-appsec`. To create an access token, [follow these steps from GitHub](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line) and be sure that you have given the token access to the repo scope.
+
+![Uploading image.png…]()
+
 
 ## Semgrep Coverage Report Workflow
 
