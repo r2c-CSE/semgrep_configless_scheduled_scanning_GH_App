@@ -141,7 +141,7 @@ jobs:
             repo_full_name = repo['full_name']
             created_at = repo['created_at']
             html_url = repo['html_url']
-            is_repo_empty = is_repo_empty(repo_full_name, pat)
+            repo_empty_state = is_repo_empty(repo_full_name, pat)
 
             latest_scan = None
             for sg_repo in semgrep_repos['projects']:
@@ -157,7 +157,7 @@ jobs:
             not_covered = 1 if (daily_mark + weekly_mark == 0) else 0
             duplicate_scans = 1 if (daily_mark + weekly_mark == 2) else 0
             
-            coverage_data.append([repo_name, daily_mark, weekly_mark, not_covered, duplicate_scans, latest_scan, created_at, html_url, is_repo_empty])
+            coverage_data.append([repo_name, daily_mark, weekly_mark, not_covered, duplicate_scans, latest_scan, created_at, html_url, repo_empty_state])
         
         coverage_df = pd.DataFrame(coverage_data, columns=['Repository', 'Daily', 'Weekly', 'Not Covered', 'Duplicate Scans', 'Latest Scan', 'Created At', 'URL', 'Is Repo Empty'])
         coverage_df.to_csv('coverage.csv', index=False)
