@@ -29,6 +29,7 @@ jobs:
         PAT_READ_ONLY_CUSTOMER_REPO: ${{ secrets.PAT_READ_ONLY_CUSTOMER_REPO }}
         SEMGREP_API_WEB_TOKEN:  ${{ secrets.SEMGREP_API_WEB_TOKEN }}
         SEMGREP_DEPLOYMENT_SLUG: ${{ vars.SEMGREP_DEPLOYMENT_SLUG }}
+        DEBUG_LEVEL: ${{ vars.COVERAGE_REPORT_DEBUG_LEVEL }}
 
       run: |
         import requests
@@ -38,8 +39,19 @@ jobs:
         import sys
         import logging
 
-        # Set up logging
-        logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+        # Function to convert debug level from string to logging module constant
+        def get_debug_level(level_str):
+            return {
+                'DEBUG': logging.DEBUG,
+                'INFO': logging.INFO,
+                'WARNING': logging.WARNING,
+                'ERROR': logging.ERROR,
+                'CRITICAL': logging.CRITICAL
+            }.get(level_str.upper(), logging.INFO) # Default to INFO if not matched
+
+        # Read DEBUG_LEVEL from environment and set logging level
+        debug_level_str = os.getenv('DEBUG_LEVEL', 'INFO') # Default to INFO if not set
+        logging.basicConfig(level=get_debug_level(debug_level_str), format='%(asctime)s - %(levelname)s - %(message)s')
 
         # GitHub repository in the format "org_name/repo_name"
         full_repo_name = os.environ['GITHUB_REPOSITORY']
