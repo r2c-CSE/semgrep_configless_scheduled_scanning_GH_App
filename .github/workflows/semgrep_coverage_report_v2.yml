@@ -1,4 +1,4 @@
-name: Semgrep Coverage Report
+name: v2- Semgrep Coverage Report
 
 on:
   # Scan on-demand through GitHub Actions interface:
