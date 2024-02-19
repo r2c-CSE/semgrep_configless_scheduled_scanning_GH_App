@@ -109,8 +109,11 @@ jobs:
         logging.debug(f"Weekly.csv read successful- number of repos in weekly.csv = {len(weekly_df)} ")
         
         daily_repos = daily_df[0].tolist()
+        logging.debug(f"daily_repos created- length = {len(daily_repos)} ")
         weekly_repos = weekly_df[0].tolist()
+        logging.debug(f"weekly_repos created- length = {len(weekly_repos)} ")
         github_repos = [repo['name'] for repo in repos]
+        logging.debug(f"github_repos created- length = {len(github_repos)} ")
 
         daily_repos_not_in_github_repos = [item for item in daily_repos if item not in github_repos]
         logging.debug(f"daily_repos_not_in_github_repos created- length = {len(daily_repos_not_in_github_repos)} ")
