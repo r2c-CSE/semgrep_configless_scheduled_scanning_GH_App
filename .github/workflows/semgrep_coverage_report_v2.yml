@@ -100,7 +100,8 @@ jobs:
                 break
             repos.extend(page_repos)
             page += 1
-
+        logging.debug(f"Read list of repos from GitHub API successful- number of repos = {len(repos)} ")
+        
         # Read list of repos in daily.csv and weekly.csv
         daily_df = pd.read_csv('daily.csv', header=None)
         logging.debug(f"Daily.csv read successful- number of repos in daily.csv = {len(daily_df)} ")
