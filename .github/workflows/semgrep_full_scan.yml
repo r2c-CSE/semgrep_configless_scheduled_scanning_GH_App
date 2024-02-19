@@ -21,7 +21,7 @@ jobs:
       #     ref: 'master' # ${{ github.event.client_payload.commit }} # <branch, tag, or commit>
       #     token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           
-      - name: Clone External Repository
+      - name: Clone and Scan ${{ github.event.client_payload.repository_name }}
         run: |
           # Replace 'https://' with 'https://{PAT}@' in the GIT_URL
           modified_url=$(echo "${GIT_URL}" | sed "s|https://|https://${PAT_READ_ONLY_CUSTOMER_REPO}@|")
