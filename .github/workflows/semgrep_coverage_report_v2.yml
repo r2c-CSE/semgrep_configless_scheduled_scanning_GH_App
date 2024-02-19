@@ -51,6 +51,7 @@ jobs:
 
         # Read DEBUG_LEVEL from environment and set logging level
         debug_level_str = os.getenv('DEBUG_LEVEL', 'INFO') # Default to INFO if not set
+        print(f'Debug Level set to: {debug_level_str}')
         logging.basicConfig(level=get_debug_level(debug_level_str), format='%(asctime)s - %(levelname)s - %(message)s')
 
         def is_repo_empty(repo_name, pat):
