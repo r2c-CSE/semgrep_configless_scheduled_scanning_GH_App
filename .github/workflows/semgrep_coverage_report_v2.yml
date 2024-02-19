@@ -53,8 +53,39 @@ jobs:
         debug_level_str = os.getenv('DEBUG_LEVEL', 'INFO') # Default to INFO if not set
         logging.basicConfig(level=get_debug_level(debug_level_str), format='%(asctime)s - %(levelname)s - %(message)s')
 
+        def is_repo_empty(repo_name, pat):
+            """
+            Check if a GitHub repository is empty using the GitHub API.
+        
+            Args:
+            - repo_name (str): The full name of the repository in the format "owner/repo".
+            - pat (str): Personal Access Token for GitHub API authentication.
+        
+            Returns:
+            - bool: True if the repository is empty, False otherwise.
+            """
+            url = f"https://api.github.com/repos/{repo_name}/branches"
+            headers = {"Authorization": f"token {pat}"}
+        
+            try:
+                response = requests.get(url, headers=headers)
+                response.raise_for_status()  # Raise an error for bad responses
+        
+                # Check if the list of branches is empty
+                if response.json():
+                    logging.info(f"The repository '{repo_name}' is not empty.")
+                    return "Not Empty"
+                else:
+                    logging.info(f"The repository '{repo_name}' is empty.")
+                    return "Empty"
+            except requests.exceptions.RequestException as e:
+                logging.error(f"An error occurred while checking the repository: {e}")
+                return False  # Assuming False in case of an error
+        
+        
         # GitHub repository in the format "org_name/repo_name"
         full_repo_name = os.environ['GITHUB_REPOSITORY']
+
         # Extract the organization name
         org_name = full_repo_name.split('/')[0]
         logging.info(f"Organization Name: {org_name}")
@@ -109,7 +140,8 @@ jobs:
             repo_full_name = repo['full_name']
             created_at = repo['created_at']
             html_url = repo['html_url']
-            
+            is_repo_empty = is_repo_empty(repo_full_name, pat)
+
             latest_scan = None
             for sg_repo in semgrep_repos['projects']:
                 if sg_repo['name'] == repo_full_name:
@@ -124,9 +156,9 @@ jobs:
             not_covered = 1 if (daily_mark + weekly_mark == 0) else 0
             duplicate_scans = 1 if (daily_mark + weekly_mark == 2) else 0
             
-            coverage_data.append([repo_name, daily_mark, weekly_mark, not_covered, duplicate_scans, latest_scan, created_at, html_url])
+            coverage_data.append([repo_name, daily_mark, weekly_mark, not_covered, duplicate_scans, latest_scan, created_at, html_url, is_repo_empty])
         
-        coverage_df = pd.DataFrame(coverage_data, columns=['Repository', 'Daily', 'Weekly', 'Not Covered', 'Duplicate Scans', 'Latest Scan', 'Created At', 'URL'])
+        coverage_df = pd.DataFrame(coverage_data, columns=['Repository', 'Daily', 'Weekly', 'Not Covered', 'Duplicate Scans', 'Latest Scan', 'Created At', 'URL', 'Is Repo Empty'])
         coverage_df.to_csv('coverage.csv', index=False)
       
       shell: python
