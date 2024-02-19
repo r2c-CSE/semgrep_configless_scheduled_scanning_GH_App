@@ -139,8 +139,8 @@ jobs:
         coverage_data = []
         
         for repo in repos:
-            logging.debug(f"processing repo start- {repo_full_name}")
             repo_name = repo['name']
+            logging.debug(f"processing repo start- {repo_name}")
             repo_full_name = repo['full_name']
             created_at = repo['created_at']
             html_url = repo['html_url']
