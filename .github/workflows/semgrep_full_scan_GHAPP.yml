@@ -21,7 +21,7 @@ jobs:
           application_id: ${{ vars.GH_APP_CLONE_REPO_APP_ID }}
           application_private_key: ${{ secrets.GH_APP_CLONE_REPO_PRIVATE_KEY }}      
       
-      - name: Checkout different repository
+      - name: Checkout different repo ${{ github.event.client_payload.repository_name }}
         uses: actions/checkout@v2
         with:
           # repository: Nitin-Personal/javaspringvulny
