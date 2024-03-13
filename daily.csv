@@ -1,8 +1,11 @@
 repo_name
-test-repo
+mojito
+legend-engine
+log4j-vulnerable-maven
 DVWA
-deepsemgrep
-javaspringvulny
+govwa
+Damn-Vulnerable-Bank
+bad-python-app
 WebGoat
 not_there
 definitely_not_there
