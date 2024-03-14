@@ -55,7 +55,7 @@ Note: first line must be `repo_name`
 
 ## Workflow-2: Weekly
 
-Weekly workflow file: https://github.com/r2c-CSE/semgrep_zero_config_scheduled_scanning/blob/main/.github/workflows/semgrep_scheduled_weekly.yml
+Weekly workflow file: https://github.com/r2c-CSE/semgrep_configless_scheduled_scanning_GH_App/blob/main/.github/workflows/semgrep_scheduled_weekly.yml
 
 The `weekly.csv` file should be as follows:
 
@@ -72,14 +72,18 @@ Note: first line must be `repo_name`
 
 You will need to create the following Repository Secrets:
 
+![Required Repository Secrets](image.png)
+
 ![image](https://github.com/r2c-CSE/semgrep_zero_config_scheduled_scanning/assets/119853191/db567bbc-7676-4029-8799-5303a0bfdbb3)
 
 NOTE:
-- `PAT_READ_ONLY_CUSTOMER_REPO: ${{ secrets.PAT_READ_ONLY_CUSTOMER_REPO }}`- Generate PAT with Read-Only access to all repos in your GH ORG
+- **OPTIONAL (needed only if you hit issues using `GITHUB_APP`):** `PAT_READ_ONLY_CUSTOMER_REPO: ${{ secrets.PAT_READ_ONLY_CUSTOMER_REPO }}`- Generate PAT with Read-Only access to all repos in your GH ORG
     - NOTE: the scans run inside your GitHub Actions runners and no code leaves your environment (or sent to Semgrep) as part of these scheduled scans
 - **OPTIONAL (needed only if you hit issues using `GITHUB_TOKEN`):** `PAT_REPOSITORY_DISPATCH_APPSEC_REPO: ${{ secrets.PAT_REPOSITORY_DISPATCH_APPSEC_REPO }}` - Generate PAT with permissions to initiate repository dispatch in AppSec repo in your AppSec GH ORG
 
 You will need to create the following Repository Variables:
+
+![Required Repository Variables](image-1.png)
 
 ![image](https://github.com/r2c-CSE/semgrep_zero_config_scheduled_scanning/assets/119853191/f3aebfeb-079f-4e18-bf20-79177a4fe44c)
 
@@ -90,62 +94,20 @@ You will need to create the following Repository Variables:
 - `LOGGING_LEVEL: ${{ vars.LOGGING_LEVEL }}` -  Control logging level for Scans
 - `SEMGREP_DEPLOYMENT_SLUG`: Your organization's unique identifier within Semgrep.
 - `COVERAGE_REPORT_DEBUG_LEVEL`: The desired level of logging detail (e.g., DEBUG, INFO, WARNING).
+- `GH_APP_CLONE_REPO_APP_ID`: The App ID for the GitHub created
 
+
+## Semgrep Scanning Actions file using Custom GitHub App**-2**: Creating a workflow file in the scanning repo (this could be in the same GH ORG as customer repos or in a different GH ORG)
+
+Semgrep Scanning using GitHub App file: https://github.com/r2c-CSE/semgrep_configless_scheduled_scanning_GH_App/blob/master/.github/workflows/semgrep_full_scan_GHAPP.yml 
 
 ## Workflow**-2**: Creating a workflow file in the scanning repo (this could be in the same GH ORG as customer repos or in a different GH ORG)
 
-```yaml
-name: Run Semgrep Scan on Dispatch
-
-on:
-  workflow_dispatch: {}
-  repository_dispatch:
-    types: [zcs-event]
-
-jobs:
-  clone-repo:
-    runs-on: ubuntu-latest
-    container:
-      image: returntocorp/semgrep
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-          
-      - name: Clone External Repository
-        run: |
-          # Replace 'https://' with 'https://{PAT}@' in the GIT_URL
-          modified_url=$(echo "${GIT_URL}" | sed "s|https://|https://${PAT}@|")
-          
-          echo "Original URL: ${GIT_URL}"
-          echo "Modified URL: ${modified_url}"
-          echo "Repo Name: ${REPOSITORY_NAME}"
-          echo "Repo Full Name: ${SEMGREP_REPO_NAME}"
-          git clone ${modified_url} cloned-repo          
-          # show directory contents of root folder
-          ls -l cloned-repo
-          git config --global --add safe.directory /__w/nn-zcs/nn-zcs
-          cd cloned-repo
-          git status
-          export SEMGREP_REPO_NAME=$SEMGREP_REPO_NAME
-          export SEMGREP_REPO_URL=$GIT_URL
-          semgrep ci
-        env:
-          GIT_URL: ${{ github.event.client_payload.git_url }}
-          REPOSITORY_NAME: ${{ github.event.client_payload.repository_name }}
-          PAT: ${{ secrets.PAT_READ_ONLY_CUSTOMER_REPO }}
-          SEMGREP_REPO_URL: ${{ github.event.client_payload.git_url }}
-          SEMGREP_REPO_NAME: ${{ github.event.client_payload.repository_full_name }}
-          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
-```
-
-You will need to create the following 2 Secrets:
-
-- `SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}`
-- `PAT: ${{ secrets.PAT_READ_ONLY_CUSTOMER_REPO }}` : PAT should have read-only access to the repos that you would like to scan.
 
 # Setup instructions
 
 1. Create a new repo in your GitHub org - `semgrep-appsec`
+2. Create a GitHub app as explained 
 2. In this new repo, add the 3 workflow files above in the `.github/workflows/` folder
 3. We will now to create some secrets and variables needed for the workflows to work
 4. Go to `Settings` >> `Secrets and Variables` >> `Actions`
